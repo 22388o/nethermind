@@ -118,7 +118,7 @@ namespace Nethermind.Config
                                     {
                                         if (ad.AttributeType == typeof(System.ObsoleteAttribute))
                                         {
-                                            _logger.Warn("Attribute " + name + " is going to be deprecated. Please use SyncMode=" + name + " in your config instead.");
+                                            _logger.Warn($"Boolean attribute {name} is going to be deprecated. Please use SyncMode={name} in your config instead.");
                                         }
                                     }
                                     propertyInfo.SetValue(config, value);
