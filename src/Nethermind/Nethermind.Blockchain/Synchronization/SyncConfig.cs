@@ -24,15 +24,37 @@ namespace Nethermind.Blockchain.Synchronization
     {
         private bool _synchronizationEnabled = true;
         private bool _fastSync;
-        private bool _snapSync = false;
+        private StateSyncMode _syncMode = StateSyncMode.NotConfigured;
 
-        public ConfigSyncMode Mode { get; set; } = ConfigSyncMode.NotConfigured;
+        public StateSyncMode SyncMode
+        {
+            get
+            {
+                if (_syncMode != StateSyncMode.NotConfigured)
+                {
+                    return _syncMode;
+                }
+                else if (FastSync)
+                {
+                    return StateSyncMode.FastSync;
+                }
+                else if (SnapSync)
+                {
+                    return StateSyncMode.SnapSync;
+                }
+                else
+                {
+                    return StateSyncMode.FullSync;
+                }
+            }
+            set => _syncMode = value;
+        }
 
         public static ISyncConfig Default { get; } = new SyncConfig();
-        public static ISyncConfig WithFullSyncOnly { get; } = new SyncConfig {FastSync = false, FastBlocks = false, Mode = ConfigSyncMode.FullSync};
-        public static ISyncConfig WithFastSync { get; } = new SyncConfig {FastSync = true, Mode = ConfigSyncMode.FastSync};
-        public static ISyncConfig WithFastBlocks { get; } = new SyncConfig {FastSync = true, FastBlocks = true, Mode = ConfigSyncMode.FastSync};
-        public static ISyncConfig WithEth2Merge { get; } = new SyncConfig {FastSync = false, FastBlocks = false, BlockGossipEnabled = false};
+        public static ISyncConfig WithFullSyncOnly { get; } = new SyncConfig {FastBlocks = false, SyncMode = StateSyncMode.FullSync};
+        public static ISyncConfig WithFastSync { get; } = new SyncConfig {SyncMode = StateSyncMode.FastSync};
+        public static ISyncConfig WithFastBlocks { get; } = new SyncConfig {FastBlocks = true, SyncMode = StateSyncMode.FastSync};
+        public static ISyncConfig WithEth2Merge { get; } = new SyncConfig {FastBlocks = false, BlockGossipEnabled = false};
 
         public bool NetworkingEnabled { get; set; } = true;
 
@@ -49,7 +71,7 @@ namespace Nethermind.Blockchain.Synchronization
         [Obsolete("This boolean will be deprecated in future release.")]
         public bool FastSync
         {
-            get => (Mode == ConfigSyncMode.FastSync) || (Mode == ConfigSyncMode.NotConfigured && (_fastSync || SnapSync));
+            get => _fastSync || SnapSync;
             set => _fastSync = value;
         }
         public bool DownloadHeadersInFastSync { get; set; } = true;
@@ -63,11 +85,8 @@ namespace Nethermind.Blockchain.Synchronization
         public bool WitnessProtocolEnabled { get; set; } = false;
 
         [Obsolete("This boolean will be deprecated in future release.")]
-        public bool SnapSync
-        {
-            get => (Mode == ConfigSyncMode.SnapSync) || (Mode == ConfigSyncMode.NotConfigured && _snapSync);
-            set => _snapSync = value;
-        }
+        public bool SnapSync { get; set; } = false;
+
         public bool FixReceipts { get; set; } = false;
         public bool BlockGossipEnabled { get; set; } = true;
     }

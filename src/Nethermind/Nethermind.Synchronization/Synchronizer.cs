@@ -113,7 +113,7 @@ namespace Nethermind.Synchronization
 
             StartFullSyncComponents();
 
-            if (_syncConfig.FastSync)
+            if (_syncConfig.SyncMode == StateSyncMode.FastSync)
             {
                 if (_syncConfig.FastBlocks)
                 {
@@ -122,7 +122,7 @@ namespace Nethermind.Synchronization
 
                 StartFastSyncComponents();
 
-                if (_syncConfig.SnapSync)
+                if (_syncConfig.SyncMode == StateSyncMode.SnapSync)
                 {
                     StartSnapSyncComponents();
                 }

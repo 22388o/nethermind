@@ -229,7 +229,7 @@ namespace Nethermind.Synchronization.Reporting
         {
             if (!_logger.IsTrace) return;
 
-            bool isFastSync = _syncConfig.FastSync;
+            bool isFastSync = (_syncConfig.SyncMode == StateSyncMode.FastSync);
             bool isFastBlocks = _syncConfig.FastBlocks;
             bool bodiesInFastBlocks = _syncConfig.DownloadBodiesInFastSync;
             bool receiptsInFastBlocks = _syncConfig.DownloadReceiptsInFastSync;

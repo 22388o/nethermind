@@ -103,7 +103,7 @@ namespace Nethermind.Synchronization.Test.ParallelSync
                 public ISyncProgressResolver SyncProgressResolver { get; set; }
 
                 public ISyncConfig SyncConfig { get; set; } = new SyncConfig();
-                
+
                 public IBeaconSyncStrategy BeaconSyncStrategy { get; set; } = No.BeaconSync;
 
                 private void SetDefaults()
@@ -652,7 +652,7 @@ namespace Nethermind.Synchronization.Test.ParallelSync
                 {
                     _configActions.Add(() =>
                     {
-                        SyncConfig.FastSync = true;
+                        SyncConfig.SyncMode = StateSyncMode.FastSync;
                         SyncConfig.FastBlocks = true;
                         return "fast sync with fast blocks";
                     });
@@ -664,7 +664,7 @@ namespace Nethermind.Synchronization.Test.ParallelSync
                 {
                     _configActions.Add(() =>
                     {
-                        SyncConfig.FastSync = true;
+                        SyncConfig.SyncMode = StateSyncMode.FastSync;
                         SyncConfig.FastBlocks = false;
                         return "fast sync without fast blocks";
                     });
@@ -702,6 +702,7 @@ namespace Nethermind.Synchronization.Test.ParallelSync
                 {
                     _configActions.Add(() =>
                     {
+                        SyncConfig.SyncMode = StateSyncMode.FullSync;
                         SyncConfig.FastSync = false;
                         SyncConfig.FastBlocks = false;
                         return "full archive";
@@ -709,7 +710,7 @@ namespace Nethermind.Synchronization.Test.ParallelSync
 
                     return this;
                 }
-                
+
                 public ScenarioBuilder WhenInBeaconSyncMode(BeaconSync mode = BeaconSync.None)
                 {
                     BeaconSyncStrategy = Substitute.For<IBeaconSyncStrategy>();
@@ -733,7 +734,7 @@ namespace Nethermind.Synchronization.Test.ParallelSync
                         {
                             overwrite.Invoke();
                         }
-                        
+
                         TotalDifficultyBasedBetterPeerStrategy bestPeerStrategy = new(SyncProgressResolver, LimboLogs.Instance);
                         MultiSyncModeSelector selector = new(SyncProgressResolver, SyncPeerPool, SyncConfig, BeaconSyncStrategy, bestPeerStrategy, LimboLogs.Instance, _needToWaitForHeaders);
                         selector.DisableTimer();
@@ -776,7 +777,7 @@ namespace Nethermind.Synchronization.Test.ParallelSync
             public static ScenarioBuilder GoesLikeThis(bool needToWaitForHeaders) =>
                 new ScenarioBuilder().WhenConsensusRequiresToWaitForHeaders(needToWaitForHeaders);
         }
-        
+
         public enum BeaconSync
         {
             None,

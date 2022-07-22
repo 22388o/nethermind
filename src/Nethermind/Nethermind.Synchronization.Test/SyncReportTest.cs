@@ -51,7 +51,11 @@ namespace Nethermind.Synchronization.Test
 
             SyncConfig syncConfig = new();
             syncConfig.FastBlocks = fastBlocks;
-            syncConfig.FastSync = fastSync;
+            if (fastSync) 
+            {
+                syncConfig.SyncMode = StateSyncMode.FastSync;
+            }
+            // syncConfig.FastSync = fastSync;
 
             SyncReport syncReport = new (pool, Substitute.For<INodeStatsManager>(), selector,  syncConfig, Substitute.For<IPivot>(), LimboLogs.Instance, 10);
             selector.Current.Returns((ci) => _syncModes.Count > 0 ? _syncModes.Dequeue() : SyncMode.Full);

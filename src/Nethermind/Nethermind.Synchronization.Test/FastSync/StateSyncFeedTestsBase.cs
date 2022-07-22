@@ -95,7 +95,8 @@ namespace Nethermind.Synchronization.Test.FastSync
             ctx.Pool.AddPeer(syncPeer);
 
             SyncConfig syncConfig = new SyncConfig();
-            syncConfig.FastSync = true;
+            syncConfig.SyncMode = StateSyncMode.FastSync;
+            // syncConfig.FastSync = true;
             ctx.SyncModeSelector = StaticSelector.StateNodesWithFastBlocks;
             ctx.TreeFeed = new(SyncMode.StateNodes, dbContext.LocalCodeDb, dbContext.LocalStateDb, blockTree, _logManager);
             ctx.Feed = new StateSyncFeed(ctx.SyncModeSelector, ctx.TreeFeed, _logManager);

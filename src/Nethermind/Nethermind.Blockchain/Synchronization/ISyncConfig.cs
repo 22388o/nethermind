@@ -31,7 +31,8 @@ namespace Nethermind.Blockchain.Synchronization
         [ConfigItem(Description = "If 'false' then the node does not download/process new blocks.", DefaultValue = "true")]
         bool SynchronizationEnabled { get; set; }
 
-        ConfigSyncMode Mode { get; set; }
+        [ConfigItem(Description = "Sync mode for client to use", DefaultValue = "StateSyncMode.NotConfigured")]
+        StateSyncMode SyncMode { get; set; }
 
         [ConfigItem(
             Description = "If set to 'true' then the Fast Sync (eth/63) synchronization algorithm will be used.",

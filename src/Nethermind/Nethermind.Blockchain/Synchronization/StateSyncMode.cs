@@ -17,7 +17,7 @@
 
 namespace Nethermind.Blockchain.Synchronization;
 
-public enum ConfigSyncMode
+public enum StateSyncMode
 {
     NotConfigured,
     FullSync,
